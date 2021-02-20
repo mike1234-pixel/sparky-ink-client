@@ -33,10 +33,6 @@
         <img id="floor" src="assets/marble-floor.jpg" />
         <img id="floor-NRM" src="assets/marble-floor-NRM.jpg" />
         <img id="sky" src="assets/sky.jpg" />
-        <!-- 3d models -->
-        <!-- <a-asset-item id="scene" src="assets/3d-models/scene.gltf"></a-asset-item>
-        <a-asset-item id="globe" src="assets/3d-models/globe/scene.gltf"></a-asset-item> -->
-        <!-- <a-asset-item id="warehouse" src="assets/3d-models/warehouse/scene.gltf"></a-asset-item> -->
         <!-- video -->
         <video
           id="winter-scene"
@@ -46,8 +42,13 @@
         ></video>
       </a-assets>
 
-      <!-- camera and cursor -->
-      <a-camera>
+  <!-- movement-controls component allows smooth locomtion on multiple devices such as trackpads and controllers -->
+	<!-- Camera Rig -->
+  <a-entity movement-controls="speed: 0.15" position="0 0 6">
+    <!-- Camera -->
+    <a-entity camera position="0 1.6 0"
+          look-controls="pointerLockEnabled: true">
+          <!-- Cursor -->
         <a-entity
           cursor="fuse: true; fuseTimeout: 1000"
           position="0 0 -1"
@@ -67,13 +68,16 @@
           raycaster="objects: .clickable"
         >
         </a-entity>
-      </a-camera>
+      </a-entity>
+      </a-entity>
 
       <!-- video -->
       <a-entity
         class="clickable"
-        event-set__click="_event: click; material.color: blue"
-        event-set__clearclass="_event: click; class: not-clickable"
+        animation__enter="property: material.color; from: #FFF; to: #000; 
+								 startEvents: click; dur: 250; easing: linear"
+			   animation__leave="property: material.color; from: #000; to: #FFF; 
+								 startEvents: mouseleave; dur: 250; easing: linear"
         material="shader: flat; side: double; src: #winter-scene"
         geometry="primitive: cylinder; radius: 5; height: 3.6815; open-ended: true; theta-start: 142.5; theta-length: 75"
         position="0.4 1.5 0"
@@ -82,11 +86,29 @@
         refreshObj
       ></a-entity>
 
-      <!-- 3d models -->
-
-      <!-- <a-entity gltf-model="#scene" position="-10 0.01 5" scale="0.015 0.015 0.015" modify-materials></a-entity>
-      <a-entity gltf-model="#globe" position="-10 0.01 5" scale="5 5 5"></a-entity> -->
-      <!-- <a-entity gltf-model="#warehouse" position="-10 8.3 5" scale="10 10 10" modify-materials></a-entity> -->
+      <a-entity position="0 1.8 -1" scale="0.5 0.5 1"
+      text="value: \nHi There!\nThis is a hoverable text.
+          12345678901234567890\n12345678901234567890;
+          color: #212121;
+          align: center;
+          wrapCount: 20;
+          width: 1;
+          font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/cabin/Cabin-Medium.json;
+          shader: msdf"
+      class="clickable"
+      geometry="primitive: plane; width: auto; height: auto"
+      material="color: #DDDDDD; shader: flat; visible: false"
+      event-set__click="_event: click;
+              animation.property: text.color;
+              animation.from: #212121;
+              animation.to: #FF0000;
+              animation.dur: 300"
+      event-set__leave="_event: mouseleave;
+              animation.property: text.color;
+              animation.from: #FF0000;
+              animation.to: #212121;
+              animation.dur: 300">
+</a-entity>
 
       <!-- Sky -->
       <!-- rotation component aligns the sun in the sky img with the light source -->
@@ -99,7 +121,8 @@
             repeat: 5 5;
             normal-map: #floor-NRM;
             normal-texture-repeat: 5 5;
-            roughness: 0.7;"
+            roughness: 0.7;
+            side: double;"
         geometry="primitive: circle; radius: 1"
         rotation="-90 0 0"
         scale="10 10 1"
@@ -109,3 +132,35 @@
     </a-scene>
   </body>
 </html>
+
+<!-- EXAMPLES / SNIPPETS -->
+
+<!-- events with animation example -->
+
+<!-- 
+        animation__enter="property: material.color; from: #FFF; to: #000; 
+								 startEvents: click; dur: 250; easing: linear"
+			  animation__leave="property: material.color; from: #000; to: #FFF; 
+								 startEvents: mouseleave; dur: 250; easing: linear"
+ -->
+
+ <!-- events without animation example -->
+
+ <!-- 
+        event-set__click="_event: click; material.color: blue"
+        event-set__clearclass="_event: click; class: not-clickable" 
+  -->
+
+<!-- using 3d models -->
+
+<!-- 1) load your 3d model into assets -->
+
+<!-- <a-asset-item id="scene" src="assets/3d-models/scene.gltf"></a-asset-item> -->
+
+<!-- 2) add your 3d model to the scene -->
+
+<!-- 
+      <a-entity gltf-model="#scene" position="-10 0.01 5" scale="0.015 0.015 0.015" modify-materials></a-entity>
+      <a-entity gltf-model="#globe" position="-10 0.01 5" scale="5 5 5"></a-entity>
+      <a-entity gltf-model="#warehouse" position="-10 8.3 5" scale="10 10 10" modify-materials></a-entity>
+ -->
