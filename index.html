@@ -9,9 +9,18 @@
     <!-- physics package - aframe-extras && aframe-physics-system -->
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/n5ro/aframe-physics-system@v4.0.1/dist/aframe-physics-system.min.js"></script>
-    <!-- super-hands -->
-    <script src="https://cdn.rawgit.com/donmccurdy/aframe-extras/v4.1.2/dist/aframe-extras.min.js"></script>
-    <script src="https://unpkg.com/super-hands@^3.0.1/dist/super-hands.min.js"></script>
+    <!-- event-set component -->
+    <script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script>
+      AFRAME.registerComponent("refresh-obj", {
+        init: function () {
+          this.el.addEventListener("click", function () {
+            var myGBcursor = document.querySelector("#myGBcursor");
+            myGBcursor.components.raycaster.refreshObjects();
+          });
+        },
+      });
+    </script>
   </head>
   <body>
     <a-scene
@@ -21,71 +30,56 @@
       touch-to-click-converter
     >
       <a-assets>
-        <img id="floor" src="assets/marble-floor.jpg">
-        <img id="floor-NRM" src="assets/marble-floor-NRM.jpg">
-        <img id="sky" src="assets/sky.jpg">
+        <img id="floor" src="assets/marble-floor.jpg" />
+        <img id="floor-NRM" src="assets/marble-floor-NRM.jpg" />
+        <img id="sky" src="assets/sky.jpg" />
         <!-- 3d models -->
         <!-- <a-asset-item id="scene" src="assets/3d-models/scene.gltf"></a-asset-item>
         <a-asset-item id="globe" src="assets/3d-models/globe/scene.gltf"></a-asset-item> -->
         <!-- <a-asset-item id="warehouse" src="assets/3d-models/warehouse/scene.gltf"></a-asset-item> -->
         <!-- video -->
-        <video id="winter-scene" autoplay loop="true" src="assets/video.mp4"></video>
+        <video
+          id="winter-scene"
+          autoplay
+          loop="true"
+          src="assets/video.mp4"
+        ></video>
       </a-assets>
 
-      <!-- CAMERA -->
-      <!-- wasd-controls - for forward/back, left/right movement using keys -->
-      <a-entity camera wasd-controls="acceleration:10000" position="0 1 1"
-                capture-mouse
-                raycaster="objects: .cube" cursor="rayOrigin:mouse"
-                static-body="shape: sphere; sphereRadius: 0.001"
-                super-hands="colliderEvent: raycaster-intersection;
-                             colliderEventProperty: els;
-                             colliderEndEvent:raycaster-intersection-cleared;
-                             colliderEndEventProperty: clearedEls;">
-      </a-entity>
-
-            <!-- cursor -->
-            <a-camera>
-              <a-entity 
-                    id="myGBcursor"
-                    cursor="fuse: true; fuseTimeout: 1500"
-                    position="0 0 -1"
-                    geometry="primitive: sphere; radius: 0.005"
-                    material="color: #000000; shader: flat; opacity: 0.5"
-                    raycaster="objects: .clickable"
-                    >
-                      <a-animation 
-                          attribute="scale" 
-                          to="3 3 3" 
-                          dur="1500" 
-                          begin="cursor-fusing"
-                          fill="backwards"
-                        >
-                      </a-animation>
-              </a-entity>
-            </a-camera>
-
-      <!-- MIXINS -->
-      <a-mixin id="cube" geometry="primitive: box; width: 0.5; height: 0.5; depth: 0.5"
-                 hoverable grabbable stretchable draggable droppable
-                 shadow
-                 event-set__dragdrop="_event: drag-drop; geometry.primitive: sphere; geometry.radius: 0.25"
-                 event-set__hoveron="_event: hover-start; material.opacity: 0.7; transparent: true"
-                 event-set__hoveroff="_event: hover-end; material.opacity: 1; transparent: false"
-                 event-set__dragon="_event: dragover-start; material.wireframe: true"
-                 event-set__dragoff="_event: dragover-end; material.wireframe: false">
-        </a-mixin>
-
-      <!-- cube -->
-      <a-entity class="cube" mixin="cube" position="0 1 -1.25" material="color: red"></a-entity>
+      <!-- camera and cursor -->
+      <a-camera>
+        <a-entity
+          cursor="fuse: true; fuseTimeout: 1000"
+          position="0 0 -1"
+          geometry="primitive: sphere; radius: 0.005"
+          material="color: #000000; shader: flat; opacity: 0.5"
+          animation__enter="property: scale;
+                                        to: 3 3 3;
+                                        dur: 1000;
+                                        easing: linear;
+                                        startEvents: mouseenter"
+          event-set__reset="_event: animationcomplete__enter; scale: 1 1 1"
+          animation__leave="property: scale;
+                                        to: 1 1 1;
+                                        dur: 1000;
+                                        easing: linear;
+                                        startEvents: mouseleave"
+          raycaster="objects: .clickable"
+        >
+        </a-entity>
+      </a-camera>
 
       <!-- video -->
-      <a-entity 
-        material="shader: flat; side: double; src: #winter-scene" 
-        geometry="primitive: cylinder; radius: 5; height: 3.6815; open-ended: true; theta-start: 142.5; theta-length: 75" 
+      <a-entity
+        class="clickable"
+        event-set__click="_event: click; material.color: blue"
+        event-set__clearclass="_event: click; class: not-clickable"
+        material="shader: flat; side: double; src: #winter-scene"
+        geometry="primitive: cylinder; radius: 5; height: 3.6815; open-ended: true; theta-start: 142.5; theta-length: 75"
         position="0.4 1.5 0"
-        rotation="0 270 0" 
+        rotation="0 270 0"
         scale="-1 1 1"
+        refreshObj
       ></a-entity>
 
       <!-- 3d models -->
@@ -96,10 +90,7 @@
 
       <!-- Sky -->
       <!-- rotation component aligns the sun in the sky img with the light source -->
-      <a-sky src="#sky"
-        rotation="0 64 0"
-      >
-     </a-sky>
+      <a-sky src="#sky" rotation="0 64 0"> </a-sky>
       <!-- Ground | Circular -->
       <!-- remove the geometry comoponent for rectangular floor -->
       <a-plane
