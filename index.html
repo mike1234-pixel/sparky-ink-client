@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>L09 - Image and curved image primitives</title>
+    <title>Sparky Ink</title>
     <!-- aframe v 1 -->
     <script src="https://aframe.io/releases/1.0.3/aframe.min.js"></script>
     <!-- physics package - aframe-extras && aframe-physics-system -->
@@ -26,68 +26,156 @@
     <a-scene
       physics="gravity: -9.8; restitution: 0.7;"
       renderer="antialias: true"
-      stats
       touch-to-click-converter
     >
       <a-assets>
-        <img id="floor" src="assets/marble-floor.jpg" />
-        <img id="floor-NRM" src="assets/marble-floor-NRM.jpg" />
-        <img id="sky" src="assets/sky.jpg" />
+        <img id="floor" src="assets/scifi-floor.jpg" />
+        <img id="floor-NRM" src="assets/scifi-floor-NRM.jpg" />
+        <img id="sky" src="assets/360_world.jpg" />
+        <img id="sparky-ink-logo" src="assets/sparky-ink-logo.png" />
+        <a-asset-item
+          id="robot"
+          src="assets/3d-models/robot/scene.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="jellyfish"
+          src="assets/3d-models/jellyfish/scene.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="astronaut"
+          src="assets/3d-models/astronaut/scene.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="spaceship"
+          src="assets/3d-models/spaceship/scene.gltf"
+        ></a-asset-item>
+        <a-asset-item
+          id="holly-hop-drive"
+          src="assets/3d-models/holly-hop-drive/scene.gltf"
+        ></a-asset-item>
         <!-- video -->
         <video
-          id="winter-scene"
+          id="video-1"
           autoplay
           loop="true"
-          src="assets/video.mp4"
+          src="assets/video-1.mp4"
+        ></video>
+        <!-- video -->
+        <video
+          id="video-2"
+          autoplay
+          loop="true"
+          muted="true"
+          src="assets/video-2.mp4"
         ></video>
       </a-assets>
 
-  <!-- movement-controls component allows smooth locomtion on multiple devices such as trackpads and controllers -->
-	<!-- Camera Rig -->
-  <a-entity movement-controls="speed: 0.15" position="0 0 6">
-    <!-- Camera -->
-    <a-entity camera position="0 1.6 0"
-          look-controls="pointerLockEnabled: true">
-          <!-- Cursor -->
+      <!-- movement-controls component allows smooth locomtion on multiple devices such as trackpads and controllers -->
+      <!-- Camera Rig -->
+      <a-entity movement-controls="speed: 0.15" position="0 0 6">
+        <!-- Camera -->
         <a-entity
-          cursor="fuse: true; fuseTimeout: 1000"
-          position="0 0 -1"
-          geometry="primitive: sphere; radius: 0.005"
-          material="color: #000000; shader: flat; opacity: 0.5"
-          animation__enter="property: scale;
+          camera
+          position="0 1.6 12"
+          look-controls="pointerLockEnabled: false"
+          wasd-controls="acceleration:300; fly:true"
+        >
+          <!-- Cursor -->
+          <a-entity
+            id="myGBcursor"
+            cursor="fuse: true; fuseTimeout: 1000"
+            position="0 0 -1"
+            geometry="primitive: sphere; radius: 0.005"
+            material="color: #FFF; shader: flat; opacity: 0.5"
+            animation__enter="property: scale;
                                         to: 3 3 3;
                                         dur: 1000;
                                         easing: linear;
                                         startEvents: mouseenter"
-          event-set__reset="_event: animationcomplete__enter; scale: 1 1 1"
-          animation__leave="property: scale;
+            event-set__reset="_event: animationcomplete__enter; scale: 1 1 1"
+            animation__leave="property: scale;
                                         to: 1 1 1;
                                         dur: 1000;
                                         easing: linear;
                                         startEvents: mouseleave"
-          raycaster="objects: .clickable"
-        >
+            raycaster="objects: .clickable"
+          >
+          </a-entity>
         </a-entity>
       </a-entity>
-      </a-entity>
 
+      <!-- position: forwardback updown leftright -->
       <!-- video -->
       <a-entity
-        class="clickable"
-        animation__enter="property: material.color; from: #FFF; to: #000; 
-								 startEvents: click; dur: 250; easing: linear"
-			   animation__leave="property: material.color; from: #000; to: #FFF; 
-								 startEvents: mouseleave; dur: 250; easing: linear"
-        material="shader: flat; side: double; src: #winter-scene"
-        geometry="primitive: cylinder; radius: 5; height: 3.6815; open-ended: true; theta-start: 142.5; theta-length: 75"
-        position="0.4 1.5 0"
+        material="shader: flat; side: double; src: #video-2"
+        geometry="primitive: cylinder; radius: 15; height: 6.6815; open-ended: true; theta-start: 142.5; theta-length: 75"
+        position="7.5 3.5 0"
         rotation="0 270 0"
         scale="-1 1 1"
         refreshObj
       ></a-entity>
 
-      <a-entity position="0 1.8 -1" scale="0.5 0.5 1"
-      text="value: \nHi There!\nThis is a hoverable text.
+      <a-image
+        src="#sparky-ink-logo"
+        position="-10 8.3 -20"
+        scale="10 10 10"
+      ></a-image>
+      <a-entity
+        text="value: Welcome to Sparky Ink Studios!;
+          color: #FFF;
+          align: center;
+          wrapCount: 20;
+          width: 20;
+          font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/cabin/Cabin-Medium.json;
+          shader: msdf"
+        position="5 8.3 -20"
+      ></a-entity>
+
+      <!-- video -->
+      <a-entity
+        material="shader: flat; side: double; src: #video-1"
+        geometry="primitive: cylinder; radius: 15; height: 6.6815; open-ended: true; theta-start: 142.5; theta-length: 75"
+        position="-7.5 3.5 0"
+        rotation="0 90 0"
+        scale="-1 1 1"
+        refreshObj
+      ></a-entity>
+
+      <a-entity
+        gltf-model="#robot"
+        position="-10 8.3 -50"
+        scale="10 10 10"
+        modify-materials
+      ></a-entity>
+      <a-entity
+        gltf-model="#jellyfish"
+        position="30 20 -30"
+        scale="0.1 0.1 0.1"
+        modify-materials
+      ></a-entity>
+      <a-entity
+        gltf-model="#astronaut"
+        position="-30 10 -30"
+        scale="0.05 0.05 0.05"
+        modify-materials
+      ></a-entity>
+      <a-entity
+        gltf-model="#spaceship"
+        position="-30 10 300"
+        scale="1 1 1"
+        modify-materials
+      ></a-entity>
+      <a-entity
+        gltf-model="#holly-hop-drive"
+        position="5 0 47"
+        scale="3 3 3"
+        modify-materials
+      ></a-entity>
+
+      <a-entity
+        position="0 1.8 -1"
+        scale="0.5 0.5 1"
+        text="value: \nHi There!\nThis is a hoverable text.
           12345678901234567890\n12345678901234567890;
           color: #212121;
           align: center;
@@ -95,37 +183,39 @@
           width: 1;
           font: https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/cabin/Cabin-Medium.json;
           shader: msdf"
-      class="clickable"
-      geometry="primitive: plane; width: auto; height: auto"
-      material="color: #DDDDDD; shader: flat; visible: false"
-      event-set__click="_event: click;
+        class="clickable"
+        geometry="primitive: plane; width: auto; height: auto"
+        material="color: #DDDDDD; shader: flat; visible: false"
+        event-set__click="_event: click;
               animation.property: text.color;
               animation.from: #212121;
               animation.to: #FF0000;
               animation.dur: 300"
-      event-set__leave="_event: mouseleave;
+        event-set__leave="_event: mouseleave;
               animation.property: text.color;
               animation.from: #FF0000;
               animation.to: #212121;
-              animation.dur: 300">
-</a-entity>
+              animation.dur: 300"
+      >
+      </a-entity>
 
       <!-- Sky -->
       <!-- rotation component aligns the sun in the sky img with the light source -->
       <a-sky src="#sky" rotation="0 64 0"> </a-sky>
       <!-- Ground | Circular -->
       <!-- remove the geometry comoponent for rectangular floor -->
+
       <a-plane
         material="color: #FFFFFF;
             src: #floor;
-            repeat: 5 5;
+            repeat: 10 10;
             normal-map: #floor-NRM;
-            normal-texture-repeat: 5 5;
+            normal-texture-repeat: 10 10;
             roughness: 0.7;
             side: double;"
         geometry="primitive: circle; radius: 1"
         rotation="-90 0 0"
-        scale="10 10 1"
+        scale="20 20 1"
         static-body
       >
       </a-plane>
@@ -144,9 +234,9 @@
 								 startEvents: mouseleave; dur: 250; easing: linear"
  -->
 
- <!-- events without animation example -->
+<!-- events without animation example -->
 
- <!-- 
+<!-- 
         event-set__click="_event: click; material.color: blue"
         event-set__clearclass="_event: click; class: not-clickable" 
   -->
@@ -164,3 +254,21 @@
       <a-entity gltf-model="#globe" position="-10 0.01 5" scale="5 5 5"></a-entity>
       <a-entity gltf-model="#warehouse" position="-10 8.3 5" scale="10 10 10" modify-materials></a-entity>
  -->
+
+<!-- frame rate -->
+
+<!-- add stats component to the a-scene primitive to see the framerate and performance -->
+
+<!-- NOTES -->
+<!-- create popups like in the a-frame example project -->
+<!-- find a good but simple 3d model if possible - some that are quick and easy to load -->
+<!-- add a navigation mesh as a final touch -->
+
+<!-- Attributions -->
+<!-- 
+-- "Lost Astronaut" (https://skfb.ly/6ywt7) by marsilainen is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+--"Simple Robot" (https://skfb.ly/BHZL) by kiliankoe is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+-- "Simple Jellyfish" (https://skfb.ly/6TnGA) by ricksticky is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+-- "Red Dwarf - Holly Hop Drive" (https://skfb.ly/6RJr7) by Scott Roantree is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+-- "Starbug 1" (https://skfb.ly/6XIAC) by Matt Dixon is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+-->
